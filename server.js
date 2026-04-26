@@ -470,18 +470,8 @@ app.post('/api/herolist', async (req, res) => {
 // ==========================================
 // 9. START SERVER
 // ==========================================
-const port = process.env.PORT || process.env.PORT || 3000;
-const localIp = getLocalIp();
+const PORT = process.env.PORT || 3000;
 
-server.listen(port, '0.0.0.0', async () => {
-  console.log('=============================================');
-  console.log('  M-OVERLAY SERVER v4.8');
-  console.log('  Local:   http://localhost:' + port);
-  console.log('  Network: http://' + localIp + ':' + port);
-  console.log('  Socket.IO Active');
-  console.log('=============================================');
-  
-  try {
-    await fs.writeFile(path.join(__dirname, 'public/serverip.txt'), localIp);
-  } catch (error) {}
+server.listen(PORT, '0.0.0.0', () => {
+  console.log('M-OVERLAY SERVER running on port ' + PORT);
 });
