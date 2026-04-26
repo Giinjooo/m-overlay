@@ -24,7 +24,7 @@
                 renderLanes(data);
 
             } catch (error) {
-                console.error("Gagal membaca data:", error);
+                console.error("Failed to read data:", error);
             }
         }
 
@@ -34,14 +34,14 @@
             function updateImage(elementId, player) {
                 const imgElement = document.getElementById(elementId);
                 
-                // Jika elemen HTML tidak ditemukan di index.html, skip agar tidak error
+                // If HTML element not found in index.html, skip to avoid error
                 if (!imgElement) return;
 
                 // Reset handler error agar bersih setiap kali update
                 imgElement.onerror = null;
 
                 // LOGIC UTAMA: Cek apakah data lane valid
-                // Valid = object player ada, properti lane ada, tidak "none", tidak kosong
+                // Valid = player object exists, lane property exists, not "none", not empty
                 if (player && player.lane && player.lane !== "none" && player.lane !== "") {
                     
                     const laneName = player.lane.toLowerCase(); // Paksa huruf kecil
@@ -55,7 +55,7 @@
                     imgElement.src = `Assets/lane/${laneName}.png`;
                     
                     // Error Handling:
-                    // Jika file gambar (misal: roam.png) tidak ditemukan di folder,
+                    // If image file (e.g., roam.png) not found in folder,
                     // maka sembunyikan elemennya (daripada muncul ikon gambar rusak)
                     imgElement.onerror = function() {
                         this.style.display = 'none';

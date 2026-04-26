@@ -227,7 +227,7 @@ function renderBans(players, startFrameId) {
 function checkDataUpdate() {
     fetch("database/matchdatateam.json?t=" + new Date().getTime())
       .then(response => {
-        if (!response.ok) throw new Error(`Gagal memuat JSON: ${response.status}`);
+        if (!response.ok) throw new Error(`Failed to load JSON: ${response.status}`);
         return response.json();
       })
       .then(data => {

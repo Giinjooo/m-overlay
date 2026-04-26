@@ -1,18 +1,18 @@
 // herodropdown.js - Controller Logic
 // FULL REVISED VERSION - Fix WebSocket Sync, Stability, & Isolated Timer
 
-// Variabel Global
+// Global Variables
 let selected1 = null;
 let selected2 = null;
 let allHeroes = [];
 let currentPhaseIndex = 0;
 let correctionMode = false;
-let currentDraftData = null; // State lokal dari data server
+let currentDraftData = null; // Local state from server
 let ws = null; // WebSocket Connection
 let reconnectInterval = null;
-let isSaving = false; // Flag untuk mencegah spam save
+let isSaving = false; // Flag to prevent spam save
 
-// Urutan dropdown (Draft Pick Rules)
+// Dropdown Order (Draft Pick Rules)
 const dropdownOrder = [
     { dropdown: 'dropdowns-11', phase: 0, display: ['ban-left-1'] },
     { dropdown: 'dropdowns-16', phase: 1, display: ['ban-right-1'] },
@@ -44,7 +44,7 @@ function connectWebSocket() {
 
     ws.onopen = () => {
         console.log('Controller Connected to Server');
-        // Saat connect, ambil data terbaru sekali saja
+        // On connect, fetch latest data once
         fetchDraftData();
         
         if (reconnectInterval) {
@@ -57,9 +57,9 @@ function connectWebSocket() {
         try {
             const msg = JSON.parse(event.data);
             
-            // Jika ada update dari server (misal dari controller lain), sinkronkan local state
+            // If there's update from server (e.g., from other controller), sync local state
             if (msg.type === 'draftdata_update' && msg.data) {
-                // Update local state tanpa fetch ulang
+                // Update local state without refetching
                 currentDraftData = msg.data;
                 applyServerDataToUI();
             }
@@ -69,7 +69,7 @@ function connectWebSocket() {
     };
 
     ws.onclose = () => {
-        console.log('Koneksi terputus. Mencoba reconnect...');
+        console.log('Connection lost. Trying to reconnect...');
         if (!reconnectInterval) {
             reconnectInterval = setInterval(connectWebSocket, 3000);
         }
@@ -92,7 +92,7 @@ async function fetchDraftData() {
         currentDraftData = data.draftdata;
         applyServerDataToUI();
     } catch (error) {
-        console.error("Gagal mengambil data draft:", error);
+        console.error("Failed to fetch draft data:", error);
     }
 }
 
@@ -107,7 +107,7 @@ async function saveDraftData() {
             body: JSON.stringify({ draftdata: currentDraftData })
         });
     } catch (error) {
-        console.error("Gagal menyimpan data draft:", error);
+        console.error("Failed to save draft data:", error);
     } finally {
         isSaving = false;
     }

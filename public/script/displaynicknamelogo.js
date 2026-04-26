@@ -13,7 +13,7 @@ async function fetchDataAndUpdate() {
         const data = await response.json();
         updateUI(data);
     } catch (error) {
-        console.error("Gagal mengambil data match:", error);
+        console.error("Failed to fetch match data:", error);
     }
 }
 

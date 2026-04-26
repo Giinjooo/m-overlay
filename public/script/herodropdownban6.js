@@ -88,7 +88,7 @@ async function fetchDraftData() {
         currentDraftData = data.draftdata;
         applyServerDataToUI();
     } catch (error) {
-        console.error("Gagal mengambil data draft:", error);
+        console.error("Failed to fetch draft data:", error);
     }
 }
 
@@ -103,7 +103,7 @@ async function saveDraftData() {
             body: JSON.stringify({ draftdata: currentDraftData })
         });
     } catch (error) {
-        console.error("Gagal menyimpan data draft:", error);
+        console.error("Failed to save draft data:", error);
     } finally {
         isSaving = false;
     }

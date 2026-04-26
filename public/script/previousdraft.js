@@ -1,5 +1,5 @@
 let saveState = 0; // 0 = Standby, 1 = Menunggu Konfirmasi
-    let resetTimer = null; // Timer untuk mengembalikan tombol jika tidak jadi diklik
+    let resetTimer = null; // Timer to revert button if not clicked
 
     async function handleSaveDraft(btn) {
         if (saveState === 0) {
@@ -38,7 +38,7 @@ let saveState = 0; // 0 = Standby, 1 = Menunggu Konfirmasi
                 console.log("Draft Saved Successfully.");
 
             } catch (e) {
-                console.error("Gagal menyimpan:", e);
+                console.error("Failed to save:", e);
                 resetSaveButton(btn); // Reset jika error
             }
         }

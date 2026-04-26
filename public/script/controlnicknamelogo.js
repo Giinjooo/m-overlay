@@ -53,7 +53,7 @@ async function loadFromServer() {
         }
 
     } catch (error) {
-        console.error("Gagal memuat data:", error);
+        console.error("Failed to load data:", error);
     }
 }
 
@@ -108,7 +108,7 @@ async function saveToServer() {
         });
 
     } catch (error) {
-        console.error("Gagal menyimpan data (Save Error):", error);
+        console.error("Failed to save data:", error);
     }
 }
 

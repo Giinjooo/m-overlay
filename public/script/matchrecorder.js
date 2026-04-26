@@ -32,7 +32,7 @@ async function handleSaveDraft(buttonElement) {
             buttonElement.style.borderColor = "#00FF8C";
             console.log("Match data successfully archived.");
         } else {
-            // Gagal dari server
+            // Server failed
             buttonElement.innerText = "ERROR";
             buttonElement.style.color = "red";
             buttonElement.style.borderColor = "red";
@@ -40,7 +40,7 @@ async function handleSaveDraft(buttonElement) {
         }
 
     } catch (error) {
-        // Error koneksi/jaringan
+        // Network/connection error
         console.error("Network error:", error);
         buttonElement.innerText = "NET ERR";
         buttonElement.style.color = "red";
@@ -122,7 +122,7 @@ async function handleDeleteAllRecords(buttonElement) {
             buttonElement.style.borderColor = "#00FF8C";
             console.log("All saved matches have been deleted from database.");
         } else {
-            // Gagal dari server
+            // Server failed
             buttonElement.innerText = "ERROR";
             buttonElement.style.color = "red";
             buttonElement.style.borderColor = "red";
@@ -130,7 +130,7 @@ async function handleDeleteAllRecords(buttonElement) {
         }
 
     } catch (error) {
-        // Error koneksi/jaringan
+        // Network/connection error
         console.error("Network error:", error);
         buttonElement.innerText = "NET ERR";
         buttonElement.style.color = "red";
