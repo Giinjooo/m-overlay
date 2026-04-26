@@ -27,6 +27,7 @@ if (process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
 const CLOUDINARY_BASE_URL = process.env.CLOUDINARY_BASE_URL || '';
 const HERO_BASE_URL = process.env.CLOUDINARY_HERO_BASE_URL || CLOUDINARY_BASE_URL + '/HeroPick/';
 const ITEM_BASE_URL = process.env.CLOUDINARY_ITEM_BASE_URL || CLOUDINARY_BASE_URL + '/Itemandspell/';
+const OTHER_BASE_URL = process.env.CLOUDINARY_OTHER_BASE_URL || CLOUDINARY_BASE_URL + '/Other/';
 const VOICE_BASE_URL = process.env.CLOUDINARY_VOICE_BASE_URL || CLOUDINARY_BASE_URL + '/Voicelines/';
 const FONT_BASE_URL = process.env.CLOUDINARY_FONT_BASE_URL || CLOUDINARY_BASE_URL + '/Font/';
 
@@ -393,6 +394,19 @@ app.post('/api/save-match-record', async (req, res) => {
 app.post('/api/analyzer-control', (req, res) => {
   io.emit('analyzer_control', req.body.action);
   res.json({ message: 'Analyzer command sent' });
+});
+
+// ==========================================
+// CLOUDINARY CONFIG API
+// ==========================================
+app.get('/api/cloudinary-config', (req, res) => {
+  res.json({
+    heroBaseUrl: HERO_BASE_URL,
+    itemBaseUrl: ITEM_BASE_URL,
+    otherBaseUrl: OTHER_BASE_URL,
+    voiceBaseUrl: VOICE_BASE_URL,
+    fontBaseUrl: FONT_BASE_URL
+  });
 });
 
 // ==========================================
