@@ -454,15 +454,14 @@
         async function initializeIP() {
             const ipDisplay = document.getElementById('sidebarIpDisplay');
             try {
-                const response = await fetch("/serverip.txt");
-                if (!response.ok) throw new Error("Net Err");
-                const ip = (await response.text()).trim();
-                if (ip) {
-                    serverIP = ip;
+                // Use current host for Railway/deployed environments
+                const currentHost = window.location.host;
+                if (currentHost) {
+                    serverIP = currentHost.split(':')[0]; // Remove port if present
                     ipDisplay.textContent = `${serverIP}:${serverPort}`;
                     ipDisplay.style.color = 'var(--success)';
                 } else {
-                    throw new Error("Empty IP");
+                    throw new Error("No host");
                 }
             } catch (error) {
                 console.error("IP Fetch Error:", error);
