@@ -12,12 +12,16 @@ const os = require('os');
 const cookieParser = require('cookie-parser')();
 
 // Cloudinary config (set via environment variables)
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'your_cloud_name',
-  api_key: process.env.CLOUDINARY_API_KEY || 'your_api_key',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'your_api_secret'
-});
+// Only initialize if credentials are provided
+let cloudinary;
+if (process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+  cloudinary = require('cloudinary').v2;
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'your_cloud_name',
+    api_key: process.env.CLOUDINARY_API_KEY || 'your_api_key',
+    api_secret: process.env.CLOUDINARY_API_SECRET || 'your_api_secret'
+  });
+}
 
 // Cloudinary Base URLs (set in environment or leave empty for local)
 const CLOUDINARY_BASE_URL = process.env.CLOUDINARY_BASE_URL || '';
@@ -300,6 +304,7 @@ app.post('/api/upload-asset', multers.theme.single('file'), (req, res) => {
 // Upload to Cloudinary (for team logos, etc)
 app.post('/api/upload-cloudinary', multers.upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+  if (!cloudinary) return res.status(500).json({ message: 'Cloudinary not configured' });
   try {
     const result = await cloudinary.uploader.upload(req.file.path, { folder: 'm-overlay' });
     fsSync.unlinkSync(req.file.path); // Delete local after upload
@@ -465,10 +470,10 @@ app.post('/api/herolist', async (req, res) => {
 // ==========================================
 // 9. START SERVER
 // ==========================================
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || process.env.PORT || 3000;
 const localIp = getLocalIp();
 
-server.listen(port, async () => {
+server.listen(port, '0.0.0.0', async () => {
   console.log('=============================================');
   console.log('  M-OVERLAY SERVER v4.8');
   console.log('  Local:   http://localhost:' + port);
