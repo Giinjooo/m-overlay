@@ -20,6 +20,17 @@ Cloudinary_Upload/
 # MSEPI Logo (keep original in Assets/Other/)
 MSEPI logo.png
 
+# Session Files (private - don't push)
+SESSION.md
+PUSH.bat
+push.bat
+PUSH_GUIDE.md
+DEPLOY.md
+ENV.md
+
+# OpenCode (local config)
+AGENTS.md
+
 # OS
 .DS_Store
 Thumbs.db
