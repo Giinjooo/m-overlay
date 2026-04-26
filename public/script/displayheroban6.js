@@ -88,6 +88,7 @@ async function fetchDraftData() {
 
 function processData(newDraftData) {
     currentDraftData = newDraftData;
+    initTimerElements(); // Ensure DOM elements are captured
     updateDisplay(newDraftData);
     updateGameLogic(newDraftData);
 }
@@ -162,11 +163,15 @@ function updateDisplay(newData) {
 }
 
 // --- 4. TIMER & PHASE UI LOGIC ---
+// Initialize lazily since DOM might not be ready at load time
+let phaseElement, arrowElement, timerElement, timerBar;
 
-const phaseElement = document.getElementById('phase');
-const arrowElement = document.getElementById('arrow');
-const timerElement = document.getElementById('timer');
-const timerBar = document.getElementById('timer-bar');
+function initTimerElements() {
+    phaseElement = document.getElementById('phase');
+    arrowElement = document.getElementById('arrow');
+    timerElement = document.getElementById('timer');
+    timerBar = document.getElementById('timer-bar');
+}
 
 const phases = [
     { type: "", direction: "/Assets/Other/LeftBanning.gif" },
@@ -247,6 +252,8 @@ function updateGameLogic(data) {
 
 // --- MURNI DIKONTROL SERVER (TANPA setInterval LOKAL) ---
 function syncTimerTick(timerValue, isRunning, phaseChanged = false) {
+    initTimerElements(); // Ensure DOM elements are captured
+    
     if (currentDraftData) {
         currentDraftData.timer = timerValue;
         currentDraftData.timer_running = isRunning;
