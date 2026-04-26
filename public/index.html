@@ -338,7 +338,7 @@
 
     <aside class="sidebar">
         <div class="app-brand">
-            <img src="Assets/Other/OVERLAYTOOLLOGO.png" alt="Overlay Tool" style="max-height: 60px; object-fit: contain;">
+            <img src="Assets/Other/MSEPI_logo.png" alt="M-Overlay" style="max-height: 60px; object-fit: contain;">
         </div>
 
         <div class="status-panel">
@@ -457,8 +457,9 @@
                 // Use current host for Railway/deployed environments
                 const currentHost = window.location.host;
                 if (currentHost) {
-                    serverIP = currentHost.split(':')[0]; // Remove port if present
-                    ipDisplay.textContent = `${serverIP}:${serverPort}`;
+                    // Don't add port for Railway/external hosts
+                    const displayHost = window.location.hostname;
+                    ipDisplay.textContent = displayHost;
                     ipDisplay.style.color = 'var(--success)';
                 } else {
                     throw new Error("No host");
