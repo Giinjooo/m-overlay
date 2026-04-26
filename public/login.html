@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-Overlay - Login</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #09090b;
+            color: #fafafa;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-box {
+            background: rgba(24, 24, 27, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-box h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #a855f7;
+        }
+        .login-box p {
+            color: #a1a1aa;
+            margin-bottom: 30px;
+        }
+        .login-box img {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #a855f7;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #a855f7, #8b5cf6);
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .error {
+            color: #ef4444;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <img src="Assets/Other/MSEPI_logo.png" alt="MSEPI">
+        <h1>M-Overlay</h1>
+        <p>Enter password to access</p>
+        <form id="loginForm">
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div class="error" id="error">Invalid password</div>
+    </div>
+    <script>
+        const form = document.getElementById('loginForm');
+        const error = document.getElementById('error');
+        const passwordInput = document.getElementById('password');
+        
+        // Check for redirect param
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect') || '/';
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: passwordInput.value })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = redirect;
+                } else {
+                    error.style.display = 'block';
+                    passwordInput.value = '';
+                }
+            } catch (err) {
+                error.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

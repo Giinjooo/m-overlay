@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-Overlay - Hero Manager</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #09090b;
+            color: #fafafa;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #a855f7;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: rgba(24, 24, 27, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #a1a1aa;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #a855f7;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #a855f7, #8b5cf6);
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .hero-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .hero-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .hero-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+        .success { color: #10b981; margin-top: 10px; }
+        .error { color: #ef4444; margin-top: 10px; }
+        .back-link {
+            color: #a855f7;
+            text-decoration: none;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Control Hub</a>
+        
+        <h1>Hero Manager</h1>
+        
+        <div class="card">
+            <h2 style="margin-bottom: 15px;">Add New Hero</h2>
+            <div class="form-group">
+                <label>Hero Name</label>
+                <input type="text" id="heroName" placeholder="e.g., Zilong">
+            </div>
+            <div class="form-group">
+                <label>Image Filename (from Cloudinary)</label>
+                <input type="text" id="heroImg" placeholder="e.g., zilong.png">
+            </div>
+            <div class="form-group">
+                <label>Voice Filename (optional)</label>
+                <input type="text" id="heroVoice" placeholder="e.g., zilong.ogg">
+            </div>
+            <button onclick="addHero()">Add Hero</button>
+            <div id="message"></div>
+        </div>
+        
+        <div class="card">
+            <h2 style="margin-bottom: 15px;">Existing Heroes (<span id="heroCount">0</span>)</h2>
+            <div class="hero-list" id="heroList"></div>
+        </div>
+    </div>
+    
+    <script>
+        let heroList = [];
+        
+        async function loadHeroes() {
+            try {
+                const res = await fetch('/api/herolist');
+                heroList = await res.json();
+                document.getElementById('heroCount').textContent = heroList.length;
+                
+                const container = document.getElementById('heroList');
+                container.innerHTML = heroList.map(hero => `
+                    <div class="hero-item">
+                        <img src="${hero.img}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMjIyIi8+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMzMzIiBmaWxsLW9wYWNpdHk9IjAuMiIvPjx0ZXh0IHg9IjMwIiB5PSIzMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZpbGw9IiNjY2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5PPC90ZXh0Pjwvc3ZnPg=='">
+                        <div>${hero.name}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Error loading heroes:', err);
+            }
+        }
+        
+        async function addHero() {
+            const name = document.getElementById('heroName').value.trim();
+            const img = document.getElementById('heroImg').value.trim();
+            const voice = document.getElementById('heroVoice').value.trim();
+            const message = document.getElementById('message');
+            
+            if (!name || !img) {
+                message.textContent = 'Hero name and image are required!';
+                message.className = 'error';
+                return;
+            }
+            
+            try {
+                const res = await fetch('/api/herolist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, img, voice })
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    message.textContent = 'Hero added successfully!';
+                    message.className = 'success';
+                    document.getElementById('heroName').value = '';
+                    document.getElementById('heroImg').value = '';
+                    document.getElementById('heroVoice').value = '';
+                    loadHeroes();
+                } else {
+                    message.textContent = data.message || 'Error adding hero';
+                    message.className = 'error';
+                }
+            } catch (err) {
+                message.textContent = 'Error adding hero';
+                message.className = 'error';
+            }
+        }
+        
+        loadHeroes();
+    </script>
+</body>
+</html>

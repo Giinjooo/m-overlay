@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+*.env
+
+# Uploads (temp files)
+public/uploads/
+public/Assets/nationalflag/
+public/Assets/costum/Theme/
+
+# Database (match records)
+public/database/savedmatch/
+
+# Cloudinary Upload Folder
+Cloudinary_Upload/
+
+# MSEPI Logo (keep original in Assets/Other/)
+MSEPI logo.png
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build
+dist/
+build/
