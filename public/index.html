@@ -475,17 +475,20 @@
         function createCard(filename, type) {
             const title = filename.replace('.html', '').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
             
+            // Use current host for deployed environments
+            const currentHost = window.location.hostname || window.location.host;
+            const currentProtocol = window.location.protocol === 'https:' ? 'https://' : 'http://';
+            
             let buttons = '';
             
             if (type === 'control') {
                 buttons = `
-                    <button class="action-btn btn-primary open-btn" data-url="http://${serverIP}:${serverPort}/${filename}">OPEN PANEL</button>
-                    <button class="action-btn copy-btn" data-url="http://${serverIP}:${serverPort}/${filename}">COPY IP</button>
+                    <button class="action-btn btn-primary open-btn" data-url="${currentProtocol}${currentHost}/${filename}">OPEN PANEL</button>
+                    <button class="action-btn copy-btn" data-url="${currentProtocol}${currentHost}/${filename}">COPY URL</button>
                 `;
             } else {
                 buttons = `
-                    <button class="action-btn btn-primary copy-btn" data-url="http://localhost:${serverPort}/${filename}">LOCALHOST</button>
-                    <button class="action-btn copy-btn" data-url="http://${serverIP}:${serverPort}/${filename}">NET IP</button>
+                    <button class="action-btn btn-primary copy-btn" data-url="${currentProtocol}${currentHost}/${filename}">COPY URL</button>
                 `;
             }
 
