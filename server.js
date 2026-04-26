@@ -227,13 +227,6 @@ io.on('connection', socket => {
   });
 });
 
-setInterval(() => {
-  io.clients((err, clients) => {
-    if (err) return;
-    // Optional: track connected clients
-  });
-}, 30000);
-
 // ==========================================
 // 8. API ROUTES
 // ==========================================
